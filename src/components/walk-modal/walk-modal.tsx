@@ -199,7 +199,7 @@ export class WalkModal {
 
       <ion-content>
         <div id='liveDetails'>
-          <h2>You have gone {Math.round(this.distance)}km</h2>
+          <h2>You have gone {this.distance.toFixed(2)}km</h2>
         </div>
 
         <div id='map'></div>

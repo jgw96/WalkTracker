@@ -58,15 +58,16 @@ export class AppHome {
       </ion-header>,
 
       <ion-content>
+        <div id='imageDiv'></div>
 
-        <ion-list>
+        <ion-list id='walkList'>
           {
             this.walks ? this.walks.map((walk) => {
               return (
                 <ion-item key={walk.key} href={`/walk/${walk.key}`}>
                   <ion-label>
                     <h2 id='listHeader'>{walk.key}</h2>
-                    <p>Distance covered: {Math.round(walk.distance)}</p>
+                    <p>Distance covered: {walk.distance.toFixed(2)}km</p>
                   </ion-label>
                 </ion-item>
               )
@@ -74,7 +75,6 @@ export class AppHome {
           }
         </ion-list>
 
-        <img id='workoutImage' src='/assets/workout.svg' alt='workout'></img>
 
         <ion-fab vertical="bottom" horizontal="end" slot="fixed">
           <ion-fab-button color='secondary' onClick={() => this.startNewWalk()}>

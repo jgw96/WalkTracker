@@ -51,7 +51,7 @@ export class WalkDetail {
       <ion-content>
         <div>
           <div id='details'>
-            <h4 id='distance'>You walked {this.walk ? Math.round(this.walk.distance) : null}km</h4>
+            <h4 id='distance'>You walked {this.walk ? this.walk.distance.toFixed(2) : null}km</h4>
           </div>
           <div id='map'></div>
         </div>

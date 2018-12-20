@@ -13,3 +13,18 @@
 #infoIcon {
   font-size: 2.1em;
 }
+
+
+@media(min-width: 1023px) {
+  #walkList {
+    margin-right: 14em;
+    margin-left: 14em;
+  }
+}
+
+@media(min-width: 1300px) {
+  #walkList {
+    margin-right: 18em;
+    margin-left: 18em;
+  }
+}
