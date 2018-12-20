@@ -13,28 +13,26 @@ export class AppHome {
   @Prop({ connect: 'ion-modal-controller' }) modalController: HTMLIonModalControllerElement;
 
   async componentDidLoad() {
-    requestAnimationFrame(async () => {
-      this.walks = await this.getWalks();
-    });
+    this.walks = await this.getWalks();
     console.log(this.walks);
   }
 
   async getWalks() {
-    return new Promise(async (resolve) => {
-      const walkKeys = await keys();
+    const walkKeys = await keys();
 
-      const tempWalks = [];
+    const tempWalks = [];
 
-      walkKeys.forEach(async (key) => {
-        const walk = await get(key);
-        walk['key'] = key;
-        tempWalks.push(walk);
-      });
+    for (let i = 0; i < walkKeys.length; i++) {
+      const walk = await get(walkKeys[i]);
+      console.log(walk, walkKeys[i]);
+      walk['key'] = walkKeys[i];
 
-      console.log(tempWalks);
+      tempWalks.push(walk);
+    }
 
-      await resolve(tempWalks);
-    });
+    console.log(tempWalks);
+
+    return tempWalks;
   }
 
   async startNewWalk() {
