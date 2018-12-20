@@ -58,11 +58,10 @@ export class AppHome {
       </ion-header>,
 
       <ion-content>
-        <div id='imageDiv'></div>
 
         <ion-list id='walkList'>
           {
-            this.walks ? this.walks.map((walk) => {
+            this.walks && this.walks.length > 0 ? this.walks.map((walk) => {
               return (
                 <ion-item key={walk.key} href={`/walk/${walk.key}`}>
                   <ion-label>
@@ -71,7 +70,10 @@ export class AppHome {
                   </ion-label>
                 </ion-item>
               )
-            }) : <ion-item><ion-label>Loading...</ion-label></ion-item>
+            }) : <div id='gettingStartedDiv'>
+              <p id='gettingStartedInfo'>Click the button below to get started!</p>
+              <img src='/assets/workout.svg' alt='workout image'></img>
+            </div>
           }
         </ion-list>
 
