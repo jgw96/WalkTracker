@@ -1,0 +1,15 @@
+#listHeader {
+  color: white;
+}
+
+#workoutImage {
+  position: fixed;
+  bottom: 0;
+  padding: 1em;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#infoIcon {
+  font-size: 2.1em;
+}
