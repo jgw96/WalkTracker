@@ -47,7 +47,7 @@ export class AppHome {
     return [
       <ion-header>
         <ion-toolbar color="primary">
-          <ion-title>WalkTracker</ion-title>
+          <ion-title>Wala</ion-title>
 
           <ion-buttons slot='end'>
             <ion-button fill='clear'>
