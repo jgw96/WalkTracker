@@ -1,4 +1,4 @@
-import { Component, Prop, State } from '@stencil/core';
+import { Component, Prop, State, h } from '@stencil/core';
 
 import { get } from 'idb-keyval';
 
@@ -18,10 +18,13 @@ export class WalkDetail {
 
   async componentDidLoad() {
     console.log('Component has been rendered');
-    this.walk = await get(this.name);
+    // this.walk = await get(this.name);
+    const walks = (await get('walks') as any[]);
+
+    this.walk = walks.find((walk) => walk.title === this.name);
     console.log(this.walk);
 
-    this.map = L.map('map').setView([this.walk.positions[0].lat, this.walk.positions[0].long], 10);
+    this.map = L.map('map').setView([this.walk.positions[0].lat, this.walk.positions[0].long], 18);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -30,11 +33,8 @@ export class WalkDetail {
     }).addTo(this.map);
 
     this.walk.positions.map((position) => {
-      console.log(position);
       L.marker([position.lat, position.long]).addTo(this.map);
     });
-
-    console.log(this.walk.positions);
   }
 
   render() {
@@ -44,14 +44,16 @@ export class WalkDetail {
           <ion-buttons slot="start">
             <ion-back-button defaultHref="/" />
           </ion-buttons>
-          <ion-title>{this.name} detail</ion-title>
+          <ion-title>{this.name}</ion-title>
         </ion-toolbar>
       </ion-header>,
 
       <ion-content>
         <div>
           <div id='details'>
-            <h4 id='distance'>You walked {this.walk ? this.walk.distance.toFixed(2) : null}km</h4>
+            <h2>Walk Details</h2>
+            <p>{this.walk ? this.walk.date : null}</p>
+            <p id='distance'>You walked {this.walk ? this.walk.distance.toFixed(2) : null}km</p>
           </div>
           <div id='map'></div>
         </div>

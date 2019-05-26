@@ -1,4 +1,4 @@
-import { Component, Prop, Listen } from '@stencil/core';
+import { Component, Prop, Listen, h } from '@stencil/core';
 
 @Component({
   tag: 'app-root',
@@ -17,7 +17,7 @@ export class AppRoot {
    * so that the new service worker can take over
    * and serve the fresh content
    */
-  @Listen('window:swUpdate')
+  @Listen('swUpdate', { target: 'window' })
   async onSWUpdate() {
     const toast = await this.toastCtrl.create({
       message: 'New version available',

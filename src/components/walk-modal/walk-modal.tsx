@@ -1,8 +1,8 @@
-import { Component, Element, Prop, State } from '@stencil/core';
+import { Component, Element, Prop, State, h } from '@stencil/core';
 
 import { calcDistance } from '../../helpers/utils';
 
-import { set } from 'idb-keyval';
+import { set, get } from 'idb-keyval';
 
 declare var L: any;
 
@@ -16,6 +16,7 @@ export class WalkModal {
 
   @Prop({ connect: 'ion-alert-controller' }) alertController: HTMLIonAlertControllerElement;
   @Prop({ connect: 'ion-toast-controller' }) toastController: HTMLIonToastControllerElement;
+  @Prop({ connect: 'ion-loading-controller' }) loadingController: HTMLIonLoadingControllerElement;
 
   @State() tracking: boolean = false;
   @State() distance: number = 0;
@@ -29,13 +30,22 @@ export class WalkModal {
   lockRequest: any;
   oldPos: any;
 
-  componentDidLoad() {
+  async componentDidLoad() {
     if (navigator.geolocation) {
+      const loading = await this.loadingController.create({
+        message: 'Loading map....'
+      });
+      await loading.present();
+
       navigator.geolocation.getCurrentPosition((position) => {
         console.log(position);
 
-        this.map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 30);
-        console.log('here');
+        this.map = L.map('map');
+        this.map.on('load', async () => {
+          await loading.dismiss();
+        });
+
+        this.map.setView([position.coords.latitude, position.coords.longitude], 30);
 
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
           attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -45,6 +55,8 @@ export class WalkModal {
 
         L.marker([position.coords.latitude, position.coords.longitude]).addTo(this.map);
       })
+
+      await this.startTracking();
     }
   }
 
@@ -85,9 +97,19 @@ export class WalkModal {
       totalDistance = totalDistance + distance;
     });
 
-    console.log(this.walkTitle, [{ positions: this.positions, distance: totalDistance }]);
+    console.log('walks', [{ title: this.walkTitle, positions: this.positions, distance: totalDistance }]);
 
-    await set(this.walkTitle, { positions: this.positions, distance: totalDistance });
+    const walks = (await get('walks') as any[]);
+
+    if (walks) {
+      const newWalk = { title: this.walkTitle, positions: this.positions, distance: totalDistance, date: new Intl.DateTimeFormat('en-US').format(new Date()) };
+      walks.push(newWalk);
+
+      await set('walks', walks);
+    }
+    else {
+      await set('walks', [{ title: this.walkTitle, positions: this.positions, distance: totalDistance, date: new Intl.DateTimeFormat('en-US').format(new Date()) }]);
+    }
   }
 
   async startTracking() {
@@ -204,11 +226,11 @@ export class WalkModal {
 
         <div id='map'></div>
 
-        {!this.tracking ? <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        {/*!this.tracking ? <ion-fab vertical="bottom" horizontal="end" slot="fixed">
           <ion-fab-button color='secondary' onClick={() => this.startTracking()}>
             <ion-icon name="walk"></ion-icon>
           </ion-fab-button>
-        </ion-fab> : null}
+    </ion-fab> : null*/}
       </ion-content>
     ];
   }

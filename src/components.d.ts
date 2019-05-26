@@ -5,54 +5,58 @@
  */
 
 
-import '@stencil/core';
-
-import '@ionic/core';
-import 'ionicons';
+import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
-
   interface AppHome {}
-  interface AppHomeAttributes extends StencilHTMLAttributes {}
-
   interface AppProfile {
     'name': string;
   }
-  interface AppProfileAttributes extends StencilHTMLAttributes {
-    'name'?: string;
-  }
-
   interface AppRoot {}
-  interface AppRootAttributes extends StencilHTMLAttributes {}
-
   interface WalkDetail {
     'name': string;
   }
-  interface WalkDetailAttributes extends StencilHTMLAttributes {
-    'name'?: string;
-  }
-
   interface WalkModal {}
-  interface WalkModalAttributes extends StencilHTMLAttributes {}
 }
 
+declare namespace LocalJSX {
+  interface AppHome extends JSXBase.HTMLAttributes {}
+  interface AppProfile extends JSXBase.HTMLAttributes {
+    'name'?: string;
+  }
+  interface AppRoot extends JSXBase.HTMLAttributes {}
+  interface WalkDetail extends JSXBase.HTMLAttributes {
+    'name'?: string;
+  }
+  interface WalkModal extends JSXBase.HTMLAttributes {}
+
+  interface IntrinsicElements {
+    'app-home': AppHome;
+    'app-profile': AppProfile;
+    'app-root': AppRoot;
+    'walk-detail': WalkDetail;
+    'walk-modal': WalkModal;
+  }
+}
+
+export { LocalJSX as JSX };
+
+
+declare module "@stencil/core" {
+  export namespace JSX {
+    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
+  }
+}
+
+
 declare global {
-  interface StencilElementInterfaces {
-    'AppHome': Components.AppHome;
-    'AppProfile': Components.AppProfile;
-    'AppRoot': Components.AppRoot;
-    'WalkDetail': Components.WalkDetail;
-    'WalkModal': Components.WalkModal;
+
+  // Adding a global JSX for backcompatibility with legacy dependencies
+  export namespace JSX {
+    export interface Element {}
   }
 
-  interface StencilIntrinsicElements {
-    'app-home': Components.AppHomeAttributes;
-    'app-profile': Components.AppProfileAttributes;
-    'app-root': Components.AppRootAttributes;
-    'walk-detail': Components.WalkDetailAttributes;
-    'walk-modal': Components.WalkModalAttributes;
-  }
 
 
   interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {}
@@ -86,14 +90,6 @@ declare global {
   };
 
   interface HTMLElementTagNameMap {
-    'app-home': HTMLAppHomeElement
-    'app-profile': HTMLAppProfileElement
-    'app-root': HTMLAppRootElement
-    'walk-detail': HTMLWalkDetailElement
-    'walk-modal': HTMLWalkModalElement
-  }
-
-  interface ElementTagNameMap {
     'app-home': HTMLAppHomeElement;
     'app-profile': HTMLAppProfileElement;
     'app-root': HTMLAppRootElement;
@@ -101,13 +97,6 @@ declare global {
     'walk-modal': HTMLWalkModalElement;
   }
 
-
-  export namespace JSX {
-    export interface Element {}
-    export interface IntrinsicElements extends StencilIntrinsicElements {
-      [tagName: string]: any;
-    }
-  }
-  export interface HTMLAttributes extends StencilHTMLAttributes {}
-
+  interface ElementTagNameMap extends HTMLElementTagNameMap {}
 }
+
