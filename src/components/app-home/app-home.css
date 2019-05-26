@@ -9,11 +9,11 @@
   align-items: center;
 }
 
-#gettingStartedInfo {
-  color: white;
+#gettingStarted {
   font-size: 1.4em;
   text-align: center;
   margin-bottom: 1.2em;
+  color: black;
 }
 
 #statsSection {

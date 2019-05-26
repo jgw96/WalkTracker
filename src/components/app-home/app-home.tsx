@@ -105,7 +105,7 @@ export class AppHome {
                 </ion-item>
               )
             }) : <div id='gettingStartedDiv'>
-                <p id='gettingStartedInfo'>Click the button below to get started!</p>
+                <p id='gettingStarted'>Click the button below to get started!</p>
                 <img src='/assets/workout.svg' alt='workout image'></img>
               </div>
           }
