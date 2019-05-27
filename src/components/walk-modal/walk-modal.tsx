@@ -3,6 +3,7 @@ import { Component, Element, Prop, State, h } from '@stencil/core';
 import { calcDistance } from '../../helpers/utils';
 
 import { set, get } from 'idb-keyval';
+import * as Comlink from 'comlink';
 
 declare var L: any;
 
@@ -43,6 +44,8 @@ export class WalkModal {
         this.map = L.map('map');
         this.map.on('load', async () => {
           await loading.dismiss();
+
+          await this.startTracking();
         });
 
         this.map.setView([position.coords.latitude, position.coords.longitude], 30);
@@ -56,7 +59,6 @@ export class WalkModal {
         L.marker([position.coords.latitude, position.coords.longitude]).addTo(this.map);
       })
 
-      await this.startTracking();
     }
   }
 
@@ -129,7 +131,7 @@ export class WalkModal {
           role: 'cancel',
           cssClass: 'secondary',
           handler: () => {
-            console.log('Confirm Cancel: blah');
+            this.dismiss();
           }
         }, {
           text: 'Lets go!',
@@ -140,7 +142,7 @@ export class WalkModal {
 
             if ('getWakeLock' in navigator) {
               try {
-                this.wakeLock = await (navigator as any).getWakeLock('screen');
+                this.wakeLock = await (navigator as any).getWakeLock('system');
                 this.wakeLock.addEventListener('activechange', async () => {
                   await this.showTrackingToast();
                 });
@@ -161,6 +163,8 @@ export class WalkModal {
               L.marker([position.coords.latitude, position.coords.longitude]).addTo(this.map);
               this.map.panTo([position.coords.latitude, position.coords.longitude]);
             });
+
+            // await this.trackSpeed();
           }
         }
       ]
@@ -168,6 +172,15 @@ export class WalkModal {
     console.log(alert);
 
     await alert.present();
+  }
+
+  async trackSpeed() {
+    const service: any = Comlink.wrap(
+      new Worker("/assets/speed-worker.js")
+    );
+    const speedTracker = await new service();
+    const doubled = await speedTracker.logSomething();
+    console.log(doubled);
   }
 
   async savePosition(lat, long) {
