@@ -63,16 +63,11 @@ export class AppHome {
     return [
       <ion-header>
         <ion-toolbar color="primary">
-          <ion-title>Wala</ion-title>
+          <ion-title>Walks</ion-title>
 
-          {/*<ion-buttons slot='end'>
-            <ion-button fill='clear'>
-              <ion-icon name="person"></ion-icon>
-            </ion-button>
-            <ion-button fill='clear'>
-              <ion-icon name="information-circle-outline"></ion-icon>
-            </ion-button>
-    </ion-buttons>*/}
+          <ion-buttons slot='end'>
+            <app-googlelogin></app-googlelogin>
+          </ion-buttons>
         </ion-toolbar>
       </ion-header>,
 

@@ -3,7 +3,6 @@ import { Component, Element, Prop, State, h } from '@stencil/core';
 import { calcDistance } from '../../helpers/utils';
 
 import { set, get } from 'idb-keyval';
-import * as Comlink from 'comlink';
 
 declare var L: any;
 
@@ -24,7 +23,6 @@ export class WalkModal {
 
   watchID: number;
   map: any;
-  trackerToast: any;
   positions: any[] = [];
   walkTitle: string;
   wakeLock: any;
@@ -62,17 +60,12 @@ export class WalkModal {
     }
   }
 
-  dismiss() {
-    if (this.trackerToast) {
-      this.trackerToast.dismiss();
-    }
-
-    (this.el.closest('ion-modal') as any).dismiss();
+  async dismiss() {
+    await (this.el.closest('ion-modal') as any).dismiss();
   }
 
   async submit() {
-    this.trackerToast.dismiss();
-    this.dismiss();
+    await this.dismiss();
 
     if (this.lockRequest) {
       this.lockRequest.cancel();
@@ -129,22 +122,25 @@ export class WalkModal {
         {
           text: 'Cancel',
           role: 'cancel',
-          cssClass: 'secondary',
+          cssClass: 'confirmButton',
           handler: () => {
             this.dismiss();
           }
         }, {
           text: 'Lets go!',
+          cssClass: 'confirmButton',
           handler: async (data) => {
             console.log('Confirm Okay', data.name);
             this.walkTitle = data.name;
             this.tracking = true;
 
             if ('getWakeLock' in navigator) {
+              console.log('using wakelock');
               try {
-                this.wakeLock = await (navigator as any).getWakeLock('system');
+                this.wakeLock = await (navigator as any).getWakeLock('screen');
+
                 this.wakeLock.addEventListener('activechange', async () => {
-                  await this.showTrackingToast();
+                  // await this.showTrackingToast();
                 });
               }
               catch (err) {
@@ -153,7 +149,7 @@ export class WalkModal {
 
               this.lockRequest = this.wakeLock.createRequest();
             } else {
-              await this.showTrackingToast();
+              // await this.showTrackingToast();
             }
 
 
@@ -162,9 +158,21 @@ export class WalkModal {
 
               L.marker([position.coords.latitude, position.coords.longitude]).addTo(this.map);
               this.map.panTo([position.coords.latitude, position.coords.longitude]);
-            });
+            }, async (err) => {
+              console.error(err);
 
-            // await this.trackSpeed();
+              const errorToast = await this.toastController.create({
+                message: 'Geolocation error, try again soon',
+                duration: 1300
+              });
+              await errorToast.present();
+
+              // cancel walk if geo error
+              await this.dismiss();
+            }, {
+                enableHighAccuracy: true
+              });
+
           }
         }
       ]
@@ -172,15 +180,6 @@ export class WalkModal {
     console.log(alert);
 
     await alert.present();
-  }
-
-  async trackSpeed() {
-    const service: any = Comlink.wrap(
-      new Worker("/assets/speed-worker.js")
-    );
-    const speedTracker = await new service();
-    const doubled = await speedTracker.logSomething();
-    console.log(doubled);
   }
 
   async savePosition(lat, long) {
@@ -200,16 +199,8 @@ export class WalkModal {
     });
   }
 
-  async showTrackingToast() {
-    this.trackerToast = await this.toastController.create({
-      message: 'Tracking walk...',
-    });
-    this.trackerToast.present();
-  }
-
-  componentDidUnload() {
+  async componentDidUnload() {
     console.log('unloaded');
-    this.trackerToast.dismiss();
     navigator.geolocation.clearWatch(this.watchID);
 
     if (this.lockRequest) {

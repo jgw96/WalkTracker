@@ -4,15 +4,17 @@
 }
 
 #details {
-  bottom: 0em;
-  left: 0;
-  right: 0;
-  border-radius: 10px 10px 0px 0px;
   position: fixed;
   z-index: 9999;
-  background: var(--ion-background-color);
   padding: 1em;
   box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+
+  border-radius: 10px;
+  bottom: 2em;
+  left: 1em;
+  right: 1em;
+  background: #323232b8;
+  backdrop-filter: blur(4px);
 }
 
 #details h2 {

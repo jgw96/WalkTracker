@@ -20,3 +20,7 @@
   margin: 0;
   padding: 0;
 }
+
+.confirmButton {
+  color: var(--ion-color-secondary) !important;
+}

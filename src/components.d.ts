@@ -9,6 +9,7 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
+  interface AppGooglelogin {}
   interface AppHome {}
   interface AppProfile {
     'name': string;
@@ -20,44 +21,14 @@ export namespace Components {
   interface WalkModal {}
 }
 
-declare namespace LocalJSX {
-  interface AppHome extends JSXBase.HTMLAttributes {}
-  interface AppProfile extends JSXBase.HTMLAttributes {
-    'name'?: string;
-  }
-  interface AppRoot extends JSXBase.HTMLAttributes {}
-  interface WalkDetail extends JSXBase.HTMLAttributes {
-    'name'?: string;
-  }
-  interface WalkModal extends JSXBase.HTMLAttributes {}
-
-  interface IntrinsicElements {
-    'app-home': AppHome;
-    'app-profile': AppProfile;
-    'app-root': AppRoot;
-    'walk-detail': WalkDetail;
-    'walk-modal': WalkModal;
-  }
-}
-
-export { LocalJSX as JSX };
-
-
-declare module "@stencil/core" {
-  export namespace JSX {
-    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
-  }
-}
-
-
 declare global {
 
-  // Adding a global JSX for backcompatibility with legacy dependencies
-  export namespace JSX {
-    export interface Element {}
-  }
 
-
+  interface HTMLAppGoogleloginElement extends Components.AppGooglelogin, HTMLStencilElement {}
+  var HTMLAppGoogleloginElement: {
+    prototype: HTMLAppGoogleloginElement;
+    new (): HTMLAppGoogleloginElement;
+  };
 
   interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {}
   var HTMLAppHomeElement: {
@@ -88,15 +59,45 @@ declare global {
     prototype: HTMLWalkModalElement;
     new (): HTMLWalkModalElement;
   };
-
   interface HTMLElementTagNameMap {
+    'app-googlelogin': HTMLAppGoogleloginElement;
     'app-home': HTMLAppHomeElement;
     'app-profile': HTMLAppProfileElement;
     'app-root': HTMLAppRootElement;
     'walk-detail': HTMLWalkDetailElement;
     'walk-modal': HTMLWalkModalElement;
   }
-
-  interface ElementTagNameMap extends HTMLElementTagNameMap {}
 }
+
+declare namespace LocalJSX {
+  interface AppGooglelogin extends JSXBase.HTMLAttributes<HTMLAppGoogleloginElement> {}
+  interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
+  interface AppProfile extends JSXBase.HTMLAttributes<HTMLAppProfileElement> {
+    'name'?: string;
+  }
+  interface AppRoot extends JSXBase.HTMLAttributes<HTMLAppRootElement> {}
+  interface WalkDetail extends JSXBase.HTMLAttributes<HTMLWalkDetailElement> {
+    'name'?: string;
+  }
+  interface WalkModal extends JSXBase.HTMLAttributes<HTMLWalkModalElement> {}
+
+  interface IntrinsicElements {
+    'app-googlelogin': AppGooglelogin;
+    'app-home': AppHome;
+    'app-profile': AppProfile;
+    'app-root': AppRoot;
+    'walk-detail': WalkDetail;
+    'walk-modal': WalkModal;
+  }
+}
+
+export { LocalJSX as JSX };
+
+
+declare module "@stencil/core" {
+  export namespace JSX {
+    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
+  }
+}
+
 

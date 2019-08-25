@@ -17,12 +17,13 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
   <link href="/build/app.css" rel="stylesheet">
-  
+
   <script type="module" src="build/app.esm.js"></script>
   <script nomodule src="build/app.js"></script>
 
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
     crossorigin="" />
 
   <link rel="apple-touch-icon" href="/assets/icon/icon.png">
@@ -36,8 +37,29 @@
 
   <noscript>JavaScript is required to use this app</noscript>
 
-  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
+    integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
     crossorigin="" async defer></script>
+
+  <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-app.js"></script>
+
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/6.4.1/firebase-auth.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAbukEi3NfZFIXbLKTYHL3EpmarqiiNiK0",
+      authDomain: "walktracker-app.firebaseapp.com",
+      databaseURL: "https://walktracker-app.firebaseio.com",
+      projectId: "walktracker-app",
+      storageBucket: "walktracker-app.appspot.com",
+      messagingSenderId: "419480625721",
+      appId: "1:419480625721:web:327c089c383f5d99"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
 
 </body>
 
