@@ -101,10 +101,30 @@ export class WalkModal {
       walks.push(newWalk);
 
       await set('walks', walks);
+      await this.saveWalks();
     }
     else {
       await set('walks', [{ title: this.walkTitle, positions: this.positions, distance: totalDistance, date: new Intl.DateTimeFormat('en-US').format(new Date()) }]);
+      await this.saveWalks();
     }
+
+
+  }
+
+  async saveWalks() {
+    const walks = await get('walks');
+    const userID = JSON.parse(sessionStorage.getItem('walaUserID')) || null;
+
+    const response = await fetch('https://wala-functions.azurewebsites.net/api/NewWalk', {
+      method: "POST",
+      body: JSON.stringify({
+        id: userID,
+        walks
+      })
+    });
+
+    const data = await response.json();
+    console.log(data);
   }
 
   async startTracking() {

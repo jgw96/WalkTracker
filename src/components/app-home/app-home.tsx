@@ -1,7 +1,5 @@
 import { Component, Prop, State, h } from '@stencil/core';
 
-import { get } from 'idb-keyval';
-
 @Component({
   tag: 'app-home',
   styleUrl: 'app-home.css'
@@ -20,12 +18,32 @@ export class AppHome {
   }
 
   async getWalks(): Promise<any[]> {
-    const walks = (await get('walks') as any[]);
+    /*const walks = (await get('walks') as any[]);
     if (walks) {
       return walks;
     }
     else {
       return null;
+    }*/
+    const userID = JSON.parse(sessionStorage.getItem('walaUserID')) || null;
+
+    if (userID !== null) {
+      const response = await fetch(`https://wala-functions.azurewebsites.net/api/walks/${userID}`, {
+        method: "POST",
+        body: JSON.stringify({
+          id: userID
+        })
+      });
+  
+      const data = await response.json();
+      console.log(data);
+  
+      if (data[0].walks) {
+        return data[0].walks;
+      }
+      else {
+        return null;
+      }
     }
   }
 

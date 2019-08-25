@@ -1,6 +1,6 @@
 import { Component, Prop, State, h } from '@stencil/core';
 
-import { get } from 'idb-keyval';
+// import { get } from 'idb-keyval';
 
 declare var L: any;
 
@@ -19,7 +19,21 @@ export class WalkDetail {
   async componentDidLoad() {
     console.log('Component has been rendered');
     // this.walk = await get(this.name);
-    const walks = (await get('walks') as any[]);
+    // const walks = (await get('walks') as any[]);
+
+    const userID = JSON.parse(sessionStorage.getItem('walaUserID')) || null;
+
+    const response = await fetch(`https://wala-functions.azurewebsites.net/api/walks/${userID}`, {
+      method: "POST",
+      body: JSON.stringify({
+        id: userID
+      })
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    const walks = data[0].walks;
 
     this.walk = walks.find((walk) => walk.title === this.name);
     console.log(this.walk);
@@ -52,8 +66,8 @@ export class WalkDetail {
         <div>
           <div id='details'>
             <h2>Walk Details</h2>
-            <p>{this.walk ? this.walk.date : null}</p>
-            <p id='distance'>You walked {this.walk ? this.walk.distance.toFixed(2) : null}km</p>
+            <p>{this.walk ? this.walk.date : 'Loading...'}</p>
+            <p id='distance'>You walked {this.walk ? `${this.walk.distance.toFixed(2)}km` : 'Loading...'}</p>
           </div>
           <div id='map'></div>
         </div>
