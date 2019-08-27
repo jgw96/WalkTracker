@@ -14,8 +14,8 @@ export class AppGoogleLogin {
     const result = await firebase.auth().getRedirectResult();
     if (result.user) {
       console.log(result);
-      sessionStorage.setItem('walaUser', JSON.stringify(result.user));
-      sessionStorage.setItem('walaUserID', JSON.stringify(result.additionalUserInfo.profile.id));
+      localStorage.setItem('walaUser', JSON.stringify(result.user));
+      localStorage.setItem('walaUserID', JSON.stringify(result.additionalUserInfo.profile.id));
 
       this.user = result;
       await this.newUser();
@@ -26,7 +26,7 @@ export class AppGoogleLogin {
         console.log('setting user', user);
         this.user = user;
       } else {
-        sessionStorage.clear();
+        localStorage.clear();
       }
     });
   }

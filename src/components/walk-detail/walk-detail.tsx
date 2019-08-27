@@ -21,7 +21,7 @@ export class WalkDetail {
     // this.walk = await get(this.name);
     // const walks = (await get('walks') as any[]);
 
-    const userID = JSON.parse(sessionStorage.getItem('walaUserID')) || null;
+    const userID = JSON.parse(localStorage.getItem('walaUserID')) || null;
 
     const response = await fetch(`https://wala-functions.azurewebsites.net/api/walks/${userID}`, {
       method: "POST",

@@ -10,9 +10,18 @@ export class AppHome {
   @State() totalDistance: number = 0;
 
   @Prop({ connect: 'ion-modal-controller' }) modalController: HTMLIonModalControllerElement;
+  @Prop({ connect: "ion-loading-controller" }) loadingController: HTMLIonLoadingControllerElement;
 
   async componentDidLoad() {
+    const loading = await this.loadingController.create({
+      message: "Loading Walks..."
+    });
+    await loading.present();
+
     this.walks = await this.getWalks();
+
+    await loading.dismiss();
+    
     this.calcDist();
     console.log(this.walks);
   }
@@ -25,7 +34,7 @@ export class AppHome {
     else {
       return null;
     }*/
-    const userID = JSON.parse(sessionStorage.getItem('walaUserID')) || null;
+    const userID = JSON.parse(localStorage.getItem('walaUserID')) || null;
 
     if (userID !== null) {
       const response = await fetch(`https://wala-functions.azurewebsites.net/api/walks/${userID}`, {
@@ -77,7 +86,6 @@ export class AppHome {
   }
 
   render() {
-    console.log('render');
     return [
       <ion-header>
         <ion-toolbar color="primary">

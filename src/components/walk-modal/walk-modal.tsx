@@ -113,7 +113,7 @@ export class WalkModal {
 
   async saveWalks() {
     const walks = await get('walks');
-    const userID = JSON.parse(sessionStorage.getItem('walaUserID')) || null;
+    const userID = JSON.parse(localStorage.getItem('walaUserID')) || null;
 
     const response = await fetch('https://wala-functions.azurewebsites.net/api/NewWalk', {
       method: "POST",
