@@ -4,3 +4,8 @@
   border-radius: 50%;
   margin-right: 8px;
 }
+
+ion-button {
+  --background: #323232 !important;
+  --color: white;
+}

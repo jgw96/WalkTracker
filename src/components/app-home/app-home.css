@@ -9,6 +9,15 @@
   align-items: center;
 }
 
+#gettingStartedDiv app-googlelogin {
+  margin-top: 4em;
+}
+
+#gettingStartedDiv p {
+  text-align: center;
+  margin-top: 2em;
+}
+
 #gettingStarted {
   font-size: 1.4em;
   text-align: center;
@@ -40,6 +49,13 @@
 
 #statsDetails h2 {
   font-weight: bold;
+}
+
+@media (min-width: 600px) {
+  #statsSection {
+    width: 25em;
+    margin-left: 10em;
+  }
 }
 
 @media(min-width: 1023px) {

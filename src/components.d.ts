@@ -15,6 +15,8 @@ export namespace Components {
     'name': string;
   }
   interface AppRoot {}
+  interface AppTabs {}
+  interface PageSettings {}
   interface WalkDetail {
     'name': string;
   }
@@ -48,6 +50,18 @@ declare global {
     new (): HTMLAppRootElement;
   };
 
+  interface HTMLAppTabsElement extends Components.AppTabs, HTMLStencilElement {}
+  var HTMLAppTabsElement: {
+    prototype: HTMLAppTabsElement;
+    new (): HTMLAppTabsElement;
+  };
+
+  interface HTMLPageSettingsElement extends Components.PageSettings, HTMLStencilElement {}
+  var HTMLPageSettingsElement: {
+    prototype: HTMLPageSettingsElement;
+    new (): HTMLPageSettingsElement;
+  };
+
   interface HTMLWalkDetailElement extends Components.WalkDetail, HTMLStencilElement {}
   var HTMLWalkDetailElement: {
     prototype: HTMLWalkDetailElement;
@@ -64,6 +78,8 @@ declare global {
     'app-home': HTMLAppHomeElement;
     'app-profile': HTMLAppProfileElement;
     'app-root': HTMLAppRootElement;
+    'app-tabs': HTMLAppTabsElement;
+    'page-settings': HTMLPageSettingsElement;
     'walk-detail': HTMLWalkDetailElement;
     'walk-modal': HTMLWalkModalElement;
   }
@@ -76,6 +92,8 @@ declare namespace LocalJSX {
     'name'?: string;
   }
   interface AppRoot extends JSXBase.HTMLAttributes<HTMLAppRootElement> {}
+  interface AppTabs extends JSXBase.HTMLAttributes<HTMLAppTabsElement> {}
+  interface PageSettings extends JSXBase.HTMLAttributes<HTMLPageSettingsElement> {}
   interface WalkDetail extends JSXBase.HTMLAttributes<HTMLWalkDetailElement> {
     'name'?: string;
   }
@@ -86,6 +104,8 @@ declare namespace LocalJSX {
     'app-home': AppHome;
     'app-profile': AppProfile;
     'app-root': AppRoot;
+    'app-tabs': AppTabs;
+    'page-settings': PageSettings;
     'walk-detail': WalkDetail;
     'walk-modal': WalkModal;
   }

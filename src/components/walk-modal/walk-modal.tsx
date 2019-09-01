@@ -1,6 +1,7 @@
 import { Component, Element, Prop, State, h } from '@stencil/core';
 
 import { calcDistance } from '../../helpers/utils';
+import { addNewWalks } from '../../services/storage';
 
 import { set, get } from 'idb-keyval';
 
@@ -112,10 +113,10 @@ export class WalkModal {
   }
 
   async saveWalks() {
-    const walks = await get('walks');
-    const userID = JSON.parse(localStorage.getItem('walaUserID')) || null;
+    const walks = await get('walks') as any[];
+    const id = JSON.parse(localStorage.getItem('walaUserID')) || null;
 
-    const response = await fetch('https://wala-functions.azurewebsites.net/api/NewWalk', {
+    /*const response = await fetch('https://wala-functions.azurewebsites.net/api/NewWalk', {
       method: "POST",
       body: JSON.stringify({
         id: userID,
@@ -124,7 +125,8 @@ export class WalkModal {
     });
 
     const data = await response.json();
-    console.log(data);
+    console.log(data);*/
+    await addNewWalks(walks, id);
   }
 
   async startTracking() {

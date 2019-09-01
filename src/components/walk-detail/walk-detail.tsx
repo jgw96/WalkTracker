@@ -1,5 +1,7 @@
 import { Component, Prop, State, h } from '@stencil/core';
 
+import { getAllWalks } from '../../services/storage';
+
 // import { get } from 'idb-keyval';
 
 declare var L: any;
@@ -23,17 +25,7 @@ export class WalkDetail {
 
     const userID = JSON.parse(localStorage.getItem('walaUserID')) || null;
 
-    const response = await fetch(`https://wala-functions.azurewebsites.net/api/walks/${userID}`, {
-      method: "POST",
-      body: JSON.stringify({
-        id: userID
-      })
-    });
-
-    const data = await response.json();
-    console.log(data);
-
-    const walks = data[0].walks;
+    const walks = await getAllWalks(userID);
 
     this.walk = walks.find((walk) => walk.title === this.name);
     console.log(this.walk);

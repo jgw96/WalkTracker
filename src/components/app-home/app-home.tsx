@@ -1,5 +1,7 @@
 import { Component, Prop, State, h } from '@stencil/core';
 
+import { getAllWalks } from '../../services/storage';
+
 @Component({
   tag: 'app-home',
   styleUrl: 'app-home.css'
@@ -21,7 +23,7 @@ export class AppHome {
     this.walks = await this.getWalks();
 
     await loading.dismiss();
-    
+
     this.calcDist();
     console.log(this.walks);
   }
@@ -34,7 +36,7 @@ export class AppHome {
     else {
       return null;
     }*/
-    const userID = JSON.parse(localStorage.getItem('walaUserID')) || null;
+    /*const userID = JSON.parse(localStorage.getItem('walaUserID')) || null;
 
     if (userID !== null) {
       const response = await fetch(`https://wala-functions.azurewebsites.net/api/walks/${userID}`, {
@@ -53,7 +55,12 @@ export class AppHome {
       else {
         return null;
       }
-    }
+    }*/
+
+    const userID = JSON.parse(localStorage.getItem('walaUserID')) || null;
+
+    const walks = await getAllWalks(userID);
+    return walks;
   }
 
   calcDist() {
@@ -87,8 +94,8 @@ export class AppHome {
 
   render() {
     return [
-      <ion-header>
-        <ion-toolbar color="primary">
+      <ion-header mode="ios">
+        <ion-toolbar>
           <ion-title>Walks</ion-title>
 
           <ion-buttons slot='end'>
@@ -114,7 +121,7 @@ export class AppHome {
           {
             this.walks && this.walks.length > 0 ? this.walks.map((walk) => {
               return (
-                <ion-item key={walk.title} href={`/walk/${walk.title}`}>
+                <ion-item key={walk.title} href={`/home/${walk.title}`}>
                   <ion-label>
                     <ion-text>
                       <h2>{walk.title}</h2>
@@ -126,18 +133,28 @@ export class AppHome {
                 </ion-item>
               )
             }) : <div id='gettingStartedDiv'>
-                <p id='gettingStarted'>Click the button below to get started!</p>
                 <img src='/assets/workout.svg' alt='workout image'></img>
+
+                <p>
+                  Login to start tracking your walks with Wala. Wala allows you to securely track your walks and keep track of
+                  where you went and how far. You can also see your distance stack up overtime!
+                </p>
+
+                <app-googlelogin>
+                  <ion-button expand="block" fill="solid" shape="round" color="secondary">Login with Google</ion-button>
+                </app-googlelogin>
               </div>
           }
         </ion-list>
 
 
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        {this.walks && this.walks.length > 0 ? <ion-fab vertical="bottom" horizontal="end" slot="fixed">
           <ion-fab-button color='secondary' onClick={() => this.startNewWalk()}>
             <ion-icon name="add"></ion-icon>
           </ion-fab-button>
         </ion-fab>
+          : null
+        }
       </ion-content>
     ];
   }

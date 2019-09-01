@@ -1,5 +1,7 @@
 import { Component, h, State } from '@stencil/core';
 
+import { addNewUser } from '../../services/storage';
+
 declare var firebase: any;
 
 @Component({
@@ -12,6 +14,7 @@ export class AppGoogleLogin {
 
   async componentDidLoad() {
     const result = await firebase.auth().getRedirectResult();
+    console.log(result);
     if (result.user) {
       console.log(result);
       localStorage.setItem('walaUser', JSON.stringify(result.user));
@@ -42,7 +45,7 @@ export class AppGoogleLogin {
   }
 
   async newUser() {
-    const response = await fetch('https://wala-functions.azurewebsites.net/api/HttpTrigger1?code=KmzRBvu48jZkw0eZUIejIlDnWcYrnGVVsIacMuOa58q3sGegpV2RKQ==', {
+    /*const response = await fetch('https://wala-functions.azurewebsites.net/api/HttpTrigger1?code=KmzRBvu48jZkw0eZUIejIlDnWcYrnGVVsIacMuOa58q3sGegpV2RKQ==', {
       method: "POST",
       body: JSON.stringify({
         name: this.user.user.displayName,
@@ -51,21 +54,26 @@ export class AppGoogleLogin {
     });
 
     const data = await response.json();
-    console.log(data);
+    console.log(data);*/
 
+    await addNewUser(this.user.user.displayName, this.user.additionalUserInfo.profile.id);
   }
 
   render() {
     return (
       this.user ?
-        <ion-button color="dark" shape="round" id="loggedInButton" onClick={() => this.logout()}>
+        <ion-button shape="round" id="loggedInButton" onClick={() => this.logout()}>
           <img src={this.user.photoURL || this.user.user.photoURL}></img>
           Logout
         </ion-button>
         :
-        <ion-button onClick={() => this.login()} fill="clear">
-          Login
-     </ion-button>
+        <div onClick={() => this.login()}>
+          <slot>
+            <ion-button shape="round" id="defaultLogin" fill="clear">
+              Login
+          </ion-button>
+          </slot>
+        </div>
     );
   }
 }

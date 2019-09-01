@@ -33,9 +33,23 @@ export class AppRoot {
     return (
       <ion-app>
         <ion-router useHash={false}>
-          <ion-route url="/" component="app-home" />
+          <ion-route-redirect from="/" to='/home' />
+
+          {/*<ion-route url="/" component="app-home" />
           <ion-route url="/profile/:name" component="app-profile" />
-          <ion-route url="/walk/:name" component='walk-detail' />
+    <ion-route url="/walk/:name" component='walk-detail' />*/}
+          <ion-route component="app-tabs">
+
+            <ion-route url="/home" component="tab-home">
+              <ion-route component="app-home"></ion-route>
+              <ion-route url="/:name" component='walk-detail' />
+            </ion-route>
+
+            <ion-route url="/settings" component="tab-settings">
+            </ion-route>
+
+          </ion-route>
+
         </ion-router>
         <ion-nav />
       </ion-app>
