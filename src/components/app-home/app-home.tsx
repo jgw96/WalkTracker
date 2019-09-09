@@ -28,6 +28,19 @@ export class AppHome {
     console.log(this.walks);
   }
 
+  async authed() {
+    const loading = await this.loadingController.create({
+      message: "Loading Walks..."
+    });
+    await loading.present();
+
+    this.walks = await this.getWalks();
+
+    await loading.dismiss();
+
+    this.calcDist();
+  }
+
   async getWalks(): Promise<any[]> {
     /*const walks = (await get('walks') as any[]);
     if (walks) {
@@ -140,7 +153,7 @@ export class AppHome {
                   where you went and how far. You can also see your distance stack up overtime!
                 </p>
 
-                <app-googlelogin>
+                <app-googlelogin onAuthed={() => this.authed()}>
                   <ion-button expand="block" fill="solid" shape="round" color="secondary">Login with Google</ion-button>
                 </app-googlelogin>
               </div>

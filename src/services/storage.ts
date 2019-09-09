@@ -23,7 +23,7 @@ export async function addNewWalks(walks: any[], id: number) {
     await db.collection("walks").doc(id).set({
       walks: walks,
       id: id
-    });
+    }, { merge: true });
   }
   catch (err) {
     console.error(err);

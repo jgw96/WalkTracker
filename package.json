@@ -14,7 +14,11 @@
     "test.watch": "stencil test --spec --e2e --watch"
   },
   "dependencies": {
+    "@capacitor/android": "^1.1.1",
+    "@capacitor/cli": "^1.1.1",
+    "@capacitor/core": "^1.1.1",
     "@ionic/core": "^4.8.0",
+    "capacitor-firebase-auth": "^0.2.1",
     "comlink": "^4.0.1",
     "idb-keyval": "^3.1.0"
   },

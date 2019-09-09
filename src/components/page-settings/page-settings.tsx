@@ -7,7 +7,9 @@ import { Component, h } from '@stencil/core';
 })
 export class PageSettings {
 
-
+  clearStorage() {
+    localStorage.clear();
+  }
 
   render() {
     return [
@@ -22,7 +24,14 @@ export class PageSettings {
       </ion-header>,
       
       <ion-content>
-        <h1>hello world</h1>
+        <ion-list>
+          <ion-item button onClick={() => this.clearStorage()}>
+            <ion-icon slot="start" name="trash"></ion-icon>
+            <ion-label>
+              Clear Storage
+            </ion-label>
+          </ion-item>
+        </ion-list>
       </ion-content>
     ];
   }

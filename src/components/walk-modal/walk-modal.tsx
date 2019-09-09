@@ -25,10 +25,16 @@ export class WalkModal {
   watchID: number;
   map: any;
   positions: any[] = [];
+  speeds: any[] = [];
   walkTitle: string;
   wakeLock: any;
+  wakeLockController: AbortController;
   lockRequest: any;
   oldPos: any;
+
+  lastTimestamp: any;
+  speedX: number = 0;
+
 
   async componentDidLoad() {
     if (navigator.geolocation) {
@@ -62,6 +68,16 @@ export class WalkModal {
   }
 
   async dismiss() {
+    if (this.lockRequest) {
+      this.lockRequest.cancel();
+    }
+
+    if (this.wakeLockController) {
+      this.wakeLockController.abort();
+    }
+
+    window.removeEventListener('devicemotion', this.calcSpeed, false);
+
     await (this.el.closest('ion-modal') as any).dismiss();
   }
 
@@ -71,6 +87,12 @@ export class WalkModal {
     if (this.lockRequest) {
       this.lockRequest.cancel();
     }
+
+    if (this.wakeLockController) {
+      this.wakeLockController.abort();
+    }
+
+    window.removeEventListener('devicemotion', this.calcSpeed, false);
 
     let oldPosition = null;
     let distances = [];
@@ -87,25 +109,32 @@ export class WalkModal {
       else {
         oldPosition = position;
       }
-    })
+    });
 
     distances.forEach((distance) => {
       totalDistance = totalDistance + distance;
     });
 
-    console.log('walks', [{ title: this.walkTitle, positions: this.positions, distance: totalDistance }]);
+    let speedSum = 0;
+    this.speeds.forEach((speed) => {
+      speedSum += speedSum + speed;
+    });
+
+    let avgSpeed = speedSum / this.speeds.length;
+
+    console.log('walks', [{ title: this.walkTitle, positions: this.positions, distance: totalDistance, speed: avgSpeed > 0 ? avgSpeed : null }]);
 
     const walks = (await get('walks') as any[]);
 
     if (walks) {
-      const newWalk = { title: this.walkTitle, positions: this.positions, distance: totalDistance, date: new Intl.DateTimeFormat('en-US').format(new Date()) };
+      const newWalk = { title: this.walkTitle, speed: avgSpeed > 0 ? avgSpeed : null, positions: this.positions, distance: totalDistance, date: new Intl.DateTimeFormat('en-US').format(new Date()) };
       walks.push(newWalk);
 
       await set('walks', walks);
       await this.saveWalks();
     }
     else {
-      await set('walks', [{ title: this.walkTitle, positions: this.positions, distance: totalDistance, date: new Intl.DateTimeFormat('en-US').format(new Date()) }]);
+      await set('walks', [{ title: this.walkTitle, speed: avgSpeed > 0 ? avgSpeed : null, positions: this.positions, distance: totalDistance, date: new Intl.DateTimeFormat('en-US').format(new Date()) }]);
       await this.saveWalks();
     }
 
@@ -132,7 +161,7 @@ export class WalkModal {
   async startTracking() {
     const alert = await this.alertController.create({
       header: 'Start tracking a new walk?',
-      message: 'Ready to start tracking a new walk? Give this walk a name, hit Lets Go below, and get started!',
+      message: 'Ready to start tracking a new walk? Give this walk a name and hit lets go!',
       inputs: [
         {
           name: 'name',
@@ -170,8 +199,15 @@ export class WalkModal {
               }
 
               this.lockRequest = this.wakeLock.createRequest();
-            } else {
+            } else if ('WakeLock' in window) {
               // await this.showTrackingToast();
+              this.wakeLockController = new AbortController();
+
+              const signal = this.wakeLockController.signal;
+              (window as any).WakeLock.request('screen', { signal })
+                .catch((err) => {
+                  console.error(err);
+                })
             }
 
 
@@ -192,8 +228,10 @@ export class WalkModal {
               // cancel walk if geo error
               await this.dismiss();
             }, {
-                enableHighAccuracy: true
-              });
+              enableHighAccuracy: true
+            });
+
+            this.watchSpeed();
 
           }
         }
@@ -221,12 +259,42 @@ export class WalkModal {
     });
   }
 
+  watchSpeed() {
+    window.addEventListener('devicemotion', (event) => {
+      (window as any).requestIdleCallback(() => {
+        this.calcSpeed(event);
+      });
+    }, false);
+  }
+
+  calcSpeed(event) {
+    let currentTime = new Date().getTime();
+    if (this.lastTimestamp === undefined) {
+      this.lastTimestamp = new Date().getTime();
+      return; 
+    }
+    //  m/s² / 1000 * (miliseconds - miliseconds)/1000 /3600 => km/h (if I didn't made a mistake)
+    this.speedX += event.acceleration.x / 1000 * ((currentTime - this.lastTimestamp) / 1000) / 3600;
+    console.log(this.speedX);
+
+    //... same for Y and Z
+    this.lastTimestamp = currentTime;
+
+    if (this.speedX > 2) {
+      this.speeds.push(this.speedX);
+    }
+  }
+
   async componentDidUnload() {
     console.log('unloaded');
     navigator.geolocation.clearWatch(this.watchID);
 
     if (this.lockRequest) {
       this.lockRequest.cancel();
+    }
+
+    if (this.wakeLockController) {
+      this.wakeLockController.abort();
     }
 
     this.tracking = false;

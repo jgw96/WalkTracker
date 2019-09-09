@@ -21,7 +21,6 @@
   font-weight: bold;
   font-size: 20px;
   margin: 0;
-  margin-bottom: 1em;
 }
 
 #distance {
@@ -29,4 +28,10 @@
   padding: 0;
   margin-top: 0;
   margin-bottom: 0;
+}
+
+#walkDate {
+  margin-top: 4px;
+  color: white;
+  font-size: 12px;
 }

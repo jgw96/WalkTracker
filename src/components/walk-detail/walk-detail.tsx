@@ -58,8 +58,9 @@ export class WalkDetail {
         <div>
           <div id='details'>
             <h2>Walk Details</h2>
-            <p>{this.walk ? this.walk.date : 'Loading...'}</p>
+            <p id="walkDate">{this.walk ? this.walk.date : 'Loading...'}</p>
             <p id='distance'>You walked {this.walk ? `${this.walk.distance.toFixed(2)}km` : 'Loading...'}</p>
+            {this.walk && this.walk.speed !== null ? <p id="speed">Avg Speed: {this.walk.speed}</p>: null}
           </div>
           <div id='map'></div>
         </div>

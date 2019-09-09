@@ -1,4 +1,4 @@
-import { Component, h, State } from '@stencil/core';
+import { Component, Event, EventEmitter, h, State } from '@stencil/core';
 
 import { addNewUser } from '../../services/storage';
 
@@ -12,6 +12,8 @@ export class AppGoogleLogin {
 
   @State() user: any = null;
 
+  @Event() authed: EventEmitter;;
+
   async componentDidLoad() {
     const result = await firebase.auth().getRedirectResult();
     console.log(result);
@@ -21,6 +23,8 @@ export class AppGoogleLogin {
       localStorage.setItem('walaUserID', JSON.stringify(result.additionalUserInfo.profile.id));
 
       this.user = result;
+
+      this.authed.emit(true);
       await this.newUser();
     }
 
@@ -28,6 +32,7 @@ export class AppGoogleLogin {
       if (user) {
         console.log('setting user', user);
         this.user = user;
+        this.authed.emit(true);
       } else {
         localStorage.clear();
       }

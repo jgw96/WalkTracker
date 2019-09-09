@@ -86,7 +86,9 @@ declare global {
 }
 
 declare namespace LocalJSX {
-  interface AppGooglelogin extends JSXBase.HTMLAttributes<HTMLAppGoogleloginElement> {}
+  interface AppGooglelogin extends JSXBase.HTMLAttributes<HTMLAppGoogleloginElement> {
+    'onAuthed'?: (event: CustomEvent<any>) => void;
+  }
   interface AppHome extends JSXBase.HTMLAttributes<HTMLAppHomeElement> {}
   interface AppProfile extends JSXBase.HTMLAttributes<HTMLAppProfileElement> {
     'name'?: string;

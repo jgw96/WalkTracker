@@ -1,0 +1,17 @@
+{
+  "appId": "com.wala.app",
+  "appName": "Wala",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "CapacitorFirebaseAuth": {
+      "providers": ["google.com"],
+      "languageCode": "en",
+      "nativeAuth": false,
+      "permissions": {
+           "google": ["profile"]
+       }
+    }
+  }
+}
